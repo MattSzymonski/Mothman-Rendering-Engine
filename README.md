@@ -1,8 +1,10 @@
-Hist0rRenderer - OpenGL renderer coded for learning purposes using GLFW, GLEW and Assimp libraries
+Hist0rRenderer - OpenGL renderer coded for learning purposes
 
 Features:
 - Rendering meshes
 - Simple materials
 - Textures
-- Directional, point and spot light
+- Directional, point and spot lights
 - Loading 3d models with Assimp library
+
+External libraries used: GLFW, GLM, GLEW, Assimp
