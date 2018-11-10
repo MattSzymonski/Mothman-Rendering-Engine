@@ -29,6 +29,6 @@ private:
 
 	std::vector<Mesh*> meshList; //Storing all meshes
 	std::vector<Texture*> textureList; //Storing all textures
-	std::vector<unsigned int> meshToTex; //Ibdexes are separate meshes, values are indexes of textures in texture list (used to bypass creating multiple same textures for different objects)
+	std::vector<unsigned int> meshToTex; //Indexes - separate meshes, values - indexes of textures in texture list (used to bypass creating multiple same textures for different objects)
 };
 
