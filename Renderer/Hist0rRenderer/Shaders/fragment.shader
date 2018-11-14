@@ -2,11 +2,14 @@
 
 #version 330	
 
+//Taken from vertex shader automatically
 in vec4 vertexColor;	
 in vec2 TexCoord;
 in vec3 Normal;
 //flat in vec3 Normal; //OpenGL keyword to create fast flat shading (should not be used)
 in vec3 FragPos;
+in vec4 DirectionalLightSpacePos; //Where position of a fragment is relative to the light (light point of view)
+
 
 out vec4 colour;	
 	
@@ -59,13 +62,49 @@ uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 
-uniform sampler2D theTexture; //Sampler that uses current Texture Unit
+uniform sampler2D theTexture; //Sampler that uses current Texture Unit (GL_TEXTURE0)
+uniform sampler2D directionalShadowMap; //Shadow map Texture Unit (GL_TEXTURE1)
+
 uniform Material material;
 
 uniform vec3 cameraPosition;
 
 
-vec4 CalcLightByDirection(Light light, vec3 direction)
+
+float CalcDirectionalShadowFactor(DirectionalLight light)
+{
+	vec3 projCoords = DirectionalLightSpacePos.xyz / DirectionalLightSpacePos.w; //Convert coordinates in relation to the light source to the normalized device coodinates (they will be between -1 and 1)
+	projCoords = (projCoords * 0.5) + 0.5; //Convert the range to 0 and 1
+
+	float currentDepth = projCoords.z; //Distance(depth) from the light to hitpoint(fragment position)
+
+	vec3 normal = normalize(Normal);
+	vec3 lightDir = normalize(directionalLight.direction);
+
+	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
+
+	float shadow = 0.0; //Shadow value used in Percentage Close to Filtering edges smoothing method
+	vec2 texelSize = 1.0 / textureSize(directionalShadowMap, 0); //Calculate texel size
+	for (int x = -1; x <= 1; ++x) //9 samples (calculations), one for each neighbour pixel
+	{
+		for (int y = -1; y <= 1; ++y)
+		{
+			float pcfDepth = texture(directionalShadowMap, projCoords.xy + vec2(x, y) * texelSize).r; //Get the value on the shadow map from the light source position (xy is point on plane that is cast orthogonally on shadow map)
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0; //If current(distance from the light source to fragment) - bias is greather than distance from the light source to the fragment depth value on the shadow map then fragment is in shadow
+		}
+	}
+
+	shadow /= 9.0; //Devide result by 9 because there where 9 samples (calculations)
+
+	if (projCoords.z > 1.0) //If distance is larger than distance to far plane of the othogonal frustrum, do not draw shadows beyond that far plane
+	{
+		shadow = 0.0;
+	}
+
+	return shadow;
+}
+
+vec4 CalcLightByDirection(Light light, vec3 direction, float shadowFactor)
 {
 	vec4 ambientColour = vec4(light.colour, 1.0f) * light.ambientIntensity;
 
@@ -87,29 +126,28 @@ vec4 CalcLightByDirection(Light light, vec3 direction)
 		}
 	}
 
-	return (ambientColour + diffuseColour + specularColour);
+	return (ambientColour + (1.0 - shadowFactor) * (diffuseColour + specularColour));
 }
 
 vec4 CalcDirectionalLight()
 {
-	return CalcLightByDirection(directionalLight.base, directionalLight.direction);
+	float shadowFactor = CalcDirectionalShadowFactor(directionalLight);
+	return CalcLightByDirection(directionalLight.base, directionalLight.direction, shadowFactor);
 }
 
 vec4 CalcPointLight(PointLight pLight)
 {
-	vec3 direction = FragPos - pLight.position;
+	vec3 direction = FragPos - pLight.position; //Direction from light to fragment
 	float distance = length(direction);
 	direction = normalize(direction);
 
-	vec4 colour = CalcLightByDirection(pLight.base, direction);
-	float attenuation = pLight.exponent * distance * distance +
-		pLight.linear * distance +
-		pLight.constant;
+	vec4 colour = CalcLightByDirection(pLight.base, direction, 0.0f);
+	float attenuation = pLight.exponent * distance * distance + pLight.linear * distance + pLight.constant; //Over distance attenuation
 
 	return (colour / attenuation);
 }
 
-vec4 CalcPointLights()
+vec4 CalcPointLights() 
 {
 	vec4 totalColour = vec4(0, 0, 0, 0);
 	for (int i = 0; i < pointLightCount; i++)
@@ -117,7 +155,7 @@ vec4 CalcPointLights()
 		totalColour += CalcPointLight(pointLights[i]);
 	}
 
-	return totalColour;
+	return totalColour; //Return color, affected by all lights
 }
 
 vec4 CalcSpotLight(SpotLight sLight)

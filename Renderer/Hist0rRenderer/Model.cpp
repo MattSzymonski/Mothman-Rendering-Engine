@@ -97,8 +97,6 @@ void Model::LoadMaterials(const aiScene * scene)
 		if (material->GetTextureCount(aiTextureType_DIFFUSE)) //Detect texture in material
 		{
 			aiString path;
-			//aiTexture te = material->GetTexture(aiTextureType_DIFFUSE,0, &path);
-
 			if (material->GetTexture(aiTextureType_DIFFUSE, 0, &path) == AI_SUCCESS) //Get first diffuse texture and store it in path variable
 			{
 				int idx = std::string(path.data).rfind("\\"); //Find \ in string and set cursor there
