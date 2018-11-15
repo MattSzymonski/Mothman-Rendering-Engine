@@ -171,6 +171,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Lights\SpotLight.h" />
     <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Lights\SpotLight.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
