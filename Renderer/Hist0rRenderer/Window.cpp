@@ -94,8 +94,12 @@ void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int m
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
 
+
+	
+
 	if (key >= 0 && key < 1024) //If is a proper key, setting key state on list where state of user inputs are stored
 	{
+		
 		if (action == GLFW_PRESS)
 		{
 			theWindow->keys[key] = true;
@@ -103,7 +107,7 @@ void Window::handleKeys(GLFWwindow* window, int key, int code, int action, int m
 		}
 		else if (action == GLFW_RELEASE)
 		{
-			theWindow->keys[key] = false;
+			theWindow->keys[key] = false;	
 			printf("Relesed: %d\n", key); //Debug
 		}
 	}

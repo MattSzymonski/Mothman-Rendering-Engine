@@ -8,57 +8,64 @@ Terrain::Terrain()
 	width = 0;
 	height = 0;
 	bitDepth = 0;
-	fileLocation = "";
+	terrainHeightMapLocation = "";
+	terrainTextureLocation = "";
+	terrainTexture = NULL;
+	terrainMesh = NULL;
+	terrainDisplacementStrength = 1;
 }
 
-Terrain::Terrain(const char* fileLoc)
+Terrain::Terrain(const char* terrainHeightMapLocation, const char* terrainTextureLocation, float terrainDisplacementStrength)
 {
 	textureID = 0;
 	width = 0;
 	height = 0;
 	bitDepth = 0;
-	fileLocation = fileLoc;
+	this->terrainHeightMapLocation = terrainHeightMapLocation;
+	this->terrainTextureLocation = terrainTextureLocation;
+	terrainTexture = NULL;
+	terrainMesh = NULL;
+	this->terrainDisplacementStrength = terrainDisplacementStrength;
 }
 
-Mesh* Terrain::CreateTerrain()
+void Terrain::CreateTerrain()
 {
-	unsigned char *texDataTerrain = stbi_load(fileLocation, &width, &height, &bitDepth, 0);
+	//http://nehe.gamedev.net/tutorial/beautiful_landscapes_by_means_of_height_mapping/16006/
+	//https://github.com/itoral/gl-terrain-demo/blob/master/src/ter-terrain.cpp#L179
+	//https://github.com/soumitrasaxena/TerrainGenerationOpenGL
+	//http://www.videotutorialsrock.com/opengl_tutorial/terrain/text.php
+
+	unsigned char *texDataTerrain = stbi_load(terrainHeightMapLocation, &width, &height, &bitDepth, 1);
 
 	if (width <= 0 && height <= 0)
 	{
-		printf("Height map not found at %s \n", fileLocation);
-		return NULL;
+		printf("Height map not found at %s \n", terrainHeightMapLocation);
+		return;
 	}
-	printf("%d, %d\n", width, height);
-	printf("%d\n", texDataTerrain[0]);
 
-	printf("Test");
+
+
+	printf("%d, %d\n", width, height);
+
 	std::vector<GLfloat> verticesTerrain;
 	int x = 0;
 	for (int row = 0; row < height; row++)
 	{
 		for (int col = 0; col < width; col++)
-		{	
-			int r = texDataTerrain[(col + row * width) * 3 + 0];
-			int g = texDataTerrain[(col + row * width) * 3 + 1];
-			int b = texDataTerrain[(col + row * width) * 3 + 2];
-			int gValue = (r + g + b) / 3;
+		{
+			int heightValue = texDataTerrain[(col + row * width)];
 			float xpos = ((float)col / (float)(width - 1)) - 0.5f;
-			float ypos = (float)gValue / (float)255;
+			float ypos = (float)heightValue / (float)255 / (float)2 * terrainDisplacementStrength;
 			float zpos = ((float)row / (float)(height - 1)) - 0.5f;
-
-
 
 			verticesTerrain.push_back(xpos);
 			verticesTerrain.push_back(ypos);
 			verticesTerrain.push_back(zpos);
+			verticesTerrain.push_back(xpos + 0.5f);
+			verticesTerrain.push_back(zpos + 0.5f);
 			verticesTerrain.push_back(0);
 			verticesTerrain.push_back(0);
 			verticesTerrain.push_back(0);
-			verticesTerrain.push_back(0);
-			verticesTerrain.push_back(0);
-			x++;
-			//printf("%d\n", x);
 		}
 		
 	}
@@ -86,23 +93,27 @@ Mesh* Terrain::CreateTerrain()
 		}
 	}
 
-	printf("Test");
-	//delete terrainHeightMap;
-
-	
-//	CalcAverageNormals(&indicesTerrain[0], indicesTerrain.size(), &verticesTerrain[0], verticesTerrain.size(), 8, 5); //Calculate average normal vectors for each vertex (Phong shading)
+	CalcAverageNormals(&indicesTerrain[0], indicesTerrain.size(), &verticesTerrain[0], verticesTerrain.size(), 8, 5); //Calculate average normal vectors for each vertex (Phong shading)
 	
 	printf("ver %d, ind %d", verticesTerrain.size(), indicesTerrain.size());
 
-	Mesh *terrain = new Mesh();
-	terrain->CreateMesh(&verticesTerrain[0], &indicesTerrain[0], verticesTerrain.size(), indicesTerrain.size());
-	return terrain;
-	//meshList.push_back(terrain); //Add to the end of the list
+	terrainTexture = new Texture(terrainTextureLocation);
+	terrainTexture->LoadTexture();
+	terrainMesh = new Mesh();
+	terrainMesh->CreateMesh(&verticesTerrain[0], &indicesTerrain[0], verticesTerrain.size(), indicesTerrain.size());
 }
 
-void Terrain::CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset)
+void  Terrain::RenderTerrain()
 {
-	for (size_t i = 0; i < indiceCount; i += 3)
+	terrainTexture->UseTexture();
+	terrainMesh->RenderMesh();
+}
+
+//vLength - size of data for each vertex
+//normalOffset - where the normal data is in vertex data
+void Terrain::CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset) 
+{
+	for (size_t i = 0; i < indiceCount; i += 3) //Each 3 indices
 	{
 		unsigned int in0 = indices[i] * vLength;
 		unsigned int in1 = indices[i + 1] * vLength;
@@ -130,4 +141,6 @@ void Terrain::CalcAverageNormals(unsigned int * indices, unsigned int indiceCoun
 
 Terrain::~Terrain()
 {
+	//delete terrainTexture;
+	//delete terrainMesh;
 }

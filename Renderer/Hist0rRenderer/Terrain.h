@@ -4,7 +4,9 @@
 #include <glm\glm.hpp>
 //#include "stb_image.h"
 #include "Mesh.h"
+#include "Texture.h"
 #include <vector>
+
 
 class Terrain
 {
@@ -12,15 +14,20 @@ public:
 	Terrain();
 	~Terrain();
 
-	Terrain(const char* fileLoc);
+	Terrain(const char* terrainHeightMapLocation, const char* terrainTextureLocation, float terrainDisplacementStrength);
 
-	Mesh* CreateTerrain();
+	void CreateTerrain();
+	void RenderTerrain();
 	void CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset);
 
 private:
 	GLuint textureID;
 	int width, height, bitDepth;
 
-	const char* fileLocation;
+	float terrainDisplacementStrength;
+	Mesh* terrainMesh;
+	Texture* terrainTexture;
+	const char* terrainTextureLocation;
+	const char* terrainHeightMapLocation;
 };
 
