@@ -21,7 +21,7 @@ public:
 	void CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset);
 
 private:
-	GLuint textureID;
+
 	int width, height, bitDepth;
 
 	float terrainDisplacementStrength;

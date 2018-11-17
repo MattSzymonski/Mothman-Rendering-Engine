@@ -4,7 +4,6 @@
 
 Terrain::Terrain()
 {
-	textureID = 0;
 	width = 0;
 	height = 0;
 	bitDepth = 0;
@@ -17,7 +16,6 @@ Terrain::Terrain()
 
 Terrain::Terrain(const char* terrainHeightMapLocation, const char* terrainTextureLocation, float terrainDisplacementStrength)
 {
-	textureID = 0;
 	width = 0;
 	height = 0;
 	bitDepth = 0;
@@ -35,6 +33,8 @@ void Terrain::CreateTerrain()
 	//https://github.com/soumitrasaxena/TerrainGenerationOpenGL
 	//http://www.videotutorialsrock.com/opengl_tutorial/terrain/text.php
 
+	//https://www.google.pl/search?q=quadtree+opengl&tbm=vid&source=lnms&sa=X&ved=0ahUKEwju_KWMl9reAhXKKCwKHezGDWEQ_AUICygC&biw=1920&bih=920&dpr=1
+
 	unsigned char *texDataTerrain = stbi_load(terrainHeightMapLocation, &width, &height, &bitDepth, 1);
 
 	if (width <= 0 && height <= 0)
@@ -42,13 +42,13 @@ void Terrain::CreateTerrain()
 		printf("Height map not found at %s \n", terrainHeightMapLocation);
 		return;
 	}
+	else
+	{
+		printf("Height map success w: %d, h: %d\n", width, height);;
+	}
 
-
-
-	printf("%d, %d\n", width, height);
 
 	std::vector<GLfloat> verticesTerrain;
-	int x = 0;
 	for (int row = 0; row < height; row++)
 	{
 		for (int col = 0; col < width; col++)
@@ -71,7 +71,6 @@ void Terrain::CreateTerrain()
 	}
 	
 	std::vector<unsigned int> indicesTerrain;
-
 	for (int row = 0; row < height - 1; row++)
 	{
 		for (int col = 0; col < width - 1; col++)
@@ -80,8 +79,6 @@ void Terrain::CreateTerrain()
 			int topRightIndexNum = (row*width + col + 1);
 			int bottomLeftIndexNum = ((row + 1)*width + col);
 			int bottomRightIndexNum = ((row + 1)*width + col + 1);
-
-
 
 			indicesTerrain.push_back(topLeftIndexNum);
 			indicesTerrain.push_back(bottomLeftIndexNum);
@@ -93,9 +90,10 @@ void Terrain::CreateTerrain()
 		}
 	}
 
-	CalcAverageNormals(&indicesTerrain[0], indicesTerrain.size(), &verticesTerrain[0], verticesTerrain.size(), 8, 5); //Calculate average normal vectors for each vertex (Phong shading)
+	CalcAverageNormals(&indicesTerrain[0], (unsigned int)indicesTerrain.size(), &verticesTerrain[0], (unsigned int)verticesTerrain.size(), 8, 5); //Calculate average normal vectors for each vertex (Phong shading)
 	
-	printf("ver %d, ind %d", verticesTerrain.size(), indicesTerrain.size());
+
+	printf("ver %d, ind %d\n", verticesTerrain.size() / 8, indicesTerrain.size());
 
 	terrainTexture = new Texture(terrainTextureLocation);
 	terrainTexture->LoadTexture();
@@ -113,14 +111,14 @@ void  Terrain::RenderTerrain()
 //normalOffset - where the normal data is in vertex data
 void Terrain::CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset) 
 {
-	for (size_t i = 0; i < indiceCount; i += 3) //Each 3 indices
-	{
+	for (size_t i = 0; i < indiceCount; i += 3) 
+	{		
 		unsigned int in0 = indices[i] * vLength;
 		unsigned int in1 = indices[i + 1] * vLength;
 		unsigned int in2 = indices[i + 2] * vLength;
 		glm::vec3 v1(vertices[in1] - vertices[in0], vertices[in1 + 1] - vertices[in0 + 1], vertices[in1 + 2] - vertices[in0 + 2]);
 		glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
-		glm::vec3 normal = glm::cross(v1, v2);
+		glm::vec3 normal = glm::cross(v2, v1);
 		normal = glm::normalize(normal);
 
 		in0 += normalOffset; in1 += normalOffset; in2 += normalOffset;
@@ -128,7 +126,7 @@ void Terrain::CalcAverageNormals(unsigned int * indices, unsigned int indiceCoun
 		vertices[in1] += normal.x; vertices[in1 + 1] += normal.y; vertices[in1 + 2] += normal.z;
 		vertices[in2] += normal.x; vertices[in2 + 1] += normal.y; vertices[in2 + 2] += normal.z;
 	}
-
+	
 	for (size_t i = 0; i < verticeCount / vLength; i++)
 	{
 		unsigned int nOffset = i * vLength + normalOffset;
