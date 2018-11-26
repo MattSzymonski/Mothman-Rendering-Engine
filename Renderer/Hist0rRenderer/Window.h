@@ -21,6 +21,7 @@ public:
 	bool getShouldClose() { return glfwWindowShouldClose(mainWindow); }
 
 	bool* getKeys() { return keys; } //Get keys from this window, used by camera
+
 	GLfloat getXChange(); //Get x change of mouse position, used by camera
 	GLfloat getYChange(); //Get y change of mouse position, used by camera
 
@@ -35,6 +36,7 @@ private:
 	GLint bufferWidth, bufferHeight;
 
 	bool keys[1024]; //List where state of user inputs will be stored
+
 
 	//To compare mouse movements between updates
 	GLfloat lastX;

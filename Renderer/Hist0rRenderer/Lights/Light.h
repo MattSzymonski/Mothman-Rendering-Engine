@@ -4,7 +4,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 
-#include "..\ShadowMap.h"
+#include "ShadowMap.h"
 
 
 class Light
@@ -16,6 +16,9 @@ public:
 		GLfloat aIntensity, GLfloat dIntensity);
 
 	ShadowMap* GetShadowMap() { return shadowMap;  }
+
+
+
 
 	~Light();
 

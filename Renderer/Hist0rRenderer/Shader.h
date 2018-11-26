@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #include <GL\glew.h>
 #include <glm\glm.hpp>
@@ -16,6 +17,7 @@
 #include "Lights/PointLight.h"
 #include "Lights/SpotLight.h"
 
+
 class Shader
 {
 public:
@@ -23,6 +25,9 @@ public:
 
 	void CreateFromString(const char* vertexCode, const char* fragmentCode);
 	void CreateFromFiles(const char* vertexLocation, const char* fragmentLocation);
+	void CreateFromFiles(const char* vertexLocation, const char* geometryLocation, const char* fragmentLocation);
+
+	void Validate();
 
 	std::string ReadFile(const char* fileLocation);
 
@@ -36,15 +41,20 @@ public:
 	GLuint GetSpecularIntensityLocation();
 	GLuint GetShininessLocation();
 	GLuint GetCameraPositionLocation();
+	GLuint GetOmniLightPosLocation();
+	GLuint GetFarPlaneLocation();
 
 	void SetDirectionalLight(DirectionalLight * dLight);
-	void SetPointLights(PointLight * pLight, unsigned int lightCount);
-	void SetSpotLights(SpotLight * sLight, unsigned int lightCount);
+	void SetPointLights(PointLight * pLight, unsigned int lightCount, unsigned int textureUnit, unsigned int offset);
+	void SetSpotLights(SpotLight * sLight, unsigned int lightCount, unsigned int textureUnit, unsigned int offset);
+
 
 	//Shadow mapping
 	void SetTexture(GLuint textureUnit); 
 	void SetDirectionalShadowMap(GLuint textureUnit);
 	void SetDirectionalLightTransform(glm::mat4* lTransform);
+
+	void SetOmniLightMatrices(std::vector<glm::mat4> lightMatrices);
 
 	void UseShader();
 	void ClearShader();
@@ -53,11 +63,15 @@ public:
 
 private:
 	int pointLightCount;
+	int spotLightCount;
 
 	GLuint shaderID, uniformProjection, uniformModel, uniformView, uniformCameraPosition,
 		uniformSpecularIntensity, uniformShininess,
-		uniformTexture, uniformDirectionalShadowMap,
-		uniformDirectionalLightTransform;
+		uniformTexture, 
+		uniformDirectionalLightTransform, uniformDirectionalShadowMap,
+		uniformOmniLightPos, uniformFarPlane;
+
+	GLuint uniformLightMatrices[6];
 
 
 	//Directional light structure
@@ -69,8 +83,8 @@ private:
 		GLuint uniformDirection;
 	} uniformDirectionalLight;
 
-	GLuint uniformPointLightCount;
 
+	
 	//Point light structure
 	struct {
 		GLuint uniformColour;
@@ -82,9 +96,10 @@ private:
 		GLuint uniformLinear;
 		GLuint uniformExponent;
 	} uniformPointLight[MAX_POINT_LIGHTS];
+	
+	GLuint uniformPointLightCount;
 
 
-	GLuint uniformSpotLightCount;
 
 	//Spot light structure
 	struct {
@@ -99,12 +114,21 @@ private:
 
 		GLuint uniformDirection;
 		GLuint uniformEdge;
-
 	} uniformSpotLight[MAX_SPOT_LIGHTS];
 
+	GLuint uniformSpotLightCount;
+
+
+	struct {
+		GLuint uniformShadowMap;
+		GLuint uniformFarPlane;
+	} uniformOmniShadowMap[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
 
 
 	void CompileShader(const char* vertexCode, const char* fragmentCode);
+	void CompileShader(const char* vertexCode, const char* geometryCode, const char* fragmentCode);
 	void AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderType);
+
+	void CompileProgram();
 };
 

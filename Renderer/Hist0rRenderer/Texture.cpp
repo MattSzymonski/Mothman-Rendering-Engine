@@ -59,7 +59,7 @@ bool Texture::LoadTexture()
 
 void Texture::UseTexture()
 {
-	glActiveTexture(GL_TEXTURE0); //(GL_TEXTURE0 - Texture Unit. min 16 on modern GPU) Setting Texture Unit
+	glActiveTexture(GL_TEXTURE1); //(GL_TEXTURE1 - Texture Unit. min 16 on modern GPU) Setting Texture Unit
 	glBindTexture(GL_TEXTURE_2D, textureID); //Binding texture with given ID to Texture Unit in line above
 }
 

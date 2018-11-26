@@ -12,7 +12,6 @@ public:
 
 
 	bool LoadTexture(); //Load texture without alpha channel
-	bool LoadTextureA(); //Load texture with alpha channel
 
 	void UseTexture();
 	void ClearTexture();
