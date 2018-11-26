@@ -34,6 +34,11 @@ void Terrain::CreateTerrain()
 	//http://www.videotutorialsrock.com/opengl_tutorial/terrain/text.php
 
 	//https://www.google.pl/search?q=quadtree+opengl&tbm=vid&source=lnms&sa=X&ved=0ahUKEwju_KWMl9reAhXKKCwKHezGDWEQ_AUICygC&biw=1920&bih=920&dpr=1
+	//https://stackoverflow.com/questions/23327282/opengl-plane-index-calculation
+
+	//http://tulrich.com/geekstuff/sig-notes.pdf
+	//http://casual-effects.blogspot.com/2014/04/fast-terrain-rendering-with-continuous.html
+	//https://www.youtube.com/watch?v=Hi190Mjirk0&t=1165s
 
 	unsigned char *texDataTerrain = stbi_load(terrainHeightMapLocation, &width, &height, &bitDepth, 1);
 

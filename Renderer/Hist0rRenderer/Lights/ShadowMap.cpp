@@ -19,6 +19,14 @@ bool ShadowMap::Init(unsigned int width, unsigned int height)
 	glBindTexture(GL_TEXTURE_2D, shadowMap); //Bind texture
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr); //Depth texture initialization 
 
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float bColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, bColour);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	/*
 	//Texture parameters
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //GL_NEAREST (gives more pixelated look)
@@ -27,6 +35,8 @@ bool ShadowMap::Init(unsigned int width, unsigned int height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 	float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	*/
+
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, FBO); //Bind FBO(generated FBO name) to the framebuffer [There is only one framebuffer! we just change where it is writing data to!]
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0); //Connect the framebuffer to the texture so if framebuffer got updated result will be stored in a texture
@@ -40,6 +50,8 @@ bool ShadowMap::Init(unsigned int width, unsigned int height)
 		printf("Framebuffer error: %s\n", Status);
 		return false;
 	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return true;
 }

@@ -168,9 +168,10 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Lights\PointLight.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Lights\OmniShadowMap.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Lights\SpotLight.h" />
-    <ClInclude Include="ShadowMap.h" />
+    <ClInclude Include="Lights\ShadowMap.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Window.h" />
@@ -184,9 +185,10 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Hist0rRenderer.cpp" />
     <ClCompile Include="Lights\PointLight.cpp" />
+    <ClCompile Include="Lights\OmniShadowMap.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Lights\SpotLight.cpp" />
-    <ClCompile Include="ShadowMap.cpp" />
+    <ClCompile Include="Lights\ShadowMap.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Window.cpp" />
