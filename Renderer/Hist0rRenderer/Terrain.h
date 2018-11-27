@@ -1,13 +1,12 @@
 #pragma once
 
-//#include <GL\glew.h>
 #include <glm\glm.hpp>
-//#include "stb_image.h"
 #include "Mesh.h"
 #include "Texture.h"
 #include <vector>
 
 #include "VertexOperations.h"
+#include "CommonValues.h"
 
 class Terrain
 {

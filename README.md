@@ -9,5 +9,6 @@ Features:
 - Directional light shadows
 - Omni-directional light shadows
 - Normal maps
+- Skyboxes
 
 External libraries used: GLFW, GLM, GLEW, Assimp

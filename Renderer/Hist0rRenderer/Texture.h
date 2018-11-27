@@ -1,9 +1,7 @@
 #pragma once
 
 #include <GL\glew.h>
-#include "stb_image.h"
-
-
+#include "CommonValues.h"
 
 enum TexType { None, Diffuse, Normal };
 

@@ -67,14 +67,12 @@ void Texture::UseTexture()
 	}
 	else if (texType == TexType::Diffuse)
 	{
-		glActiveTexture(GL_TEXTURE1);
+		glActiveTexture(GL_TEXTURE0 + DIFFUSE_TEXUNIT);
 	}
 	else if (texType == TexType::Normal)
 	{
-		glActiveTexture(GL_TEXTURE2);
+		glActiveTexture(GL_TEXTURE0 + NORMAL_TEXUNIT);
 	}
-
-	//pLight[i].GetShadowMap()->Read(GL_TEXTURE0 + textureUnit + i); //Activate texture unit
 
 	glBindTexture(GL_TEXTURE_2D, textureID); //Binding texture with given ID to Texture Unit in line above
 }
