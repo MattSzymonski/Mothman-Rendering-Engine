@@ -50,7 +50,8 @@ public:
 
 
 	//Shadow mapping
-	void SetTexture(GLuint textureUnit); 
+	void SetTextureDiffuse(GLuint textureUnit); 
+	void SetTextureNormal(GLuint textureUnit);
 	void SetDirectionalShadowMap(GLuint textureUnit);
 	void SetDirectionalLightTransform(glm::mat4* lTransform);
 
@@ -65,9 +66,10 @@ private:
 	int pointLightCount;
 	int spotLightCount;
 
+	//Pointers to uniform variables in shaders
 	GLuint shaderID, uniformProjection, uniformModel, uniformView, uniformCameraPosition,
 		uniformSpecularIntensity, uniformShininess,
-		uniformTexture, 
+		uniformTextureDiffuse, uniformTextureNormal,
 		uniformDirectionalLightTransform, uniformDirectionalShadowMap,
 		uniformOmniLightPos, uniformFarPlane;
 

@@ -8,15 +8,17 @@ Texture::Texture()
 	height = 0;
 	bitDepth = 0;
 	fileLocation = "";
+	texType = TexType::None;
 }
 
-Texture::Texture(const char* fileLoc)
+Texture::Texture(const char* fileLoc, TexType texType)
 {
 	textureID = 0;
 	width = 0;
 	height = 0;
 	bitDepth = 0;
 	fileLocation = fileLoc;
+	this->texType = texType;
 }
 
 bool Texture::LoadTexture()
@@ -59,7 +61,21 @@ bool Texture::LoadTexture()
 
 void Texture::UseTexture()
 {
-	glActiveTexture(GL_TEXTURE1); //(GL_TEXTURE1 - Texture Unit. min 16 on modern GPU) Setting Texture Unit
+	if (texType == TexType::None) //Setting in texture Unit. (min texture units 16 on modern GPU)
+	{
+		printf("Error while assigning texture to texture unit! None texture type\n");
+	}
+	else if (texType == TexType::Diffuse)
+	{
+		glActiveTexture(GL_TEXTURE1);
+	}
+	else if (texType == TexType::Normal)
+	{
+		glActiveTexture(GL_TEXTURE2);
+	}
+
+	//pLight[i].GetShadowMap()->Read(GL_TEXTURE0 + textureUnit + i); //Activate texture unit
+
 	glBindTexture(GL_TEXTURE_2D, textureID); //Binding texture with given ID to Texture Unit in line above
 }
 

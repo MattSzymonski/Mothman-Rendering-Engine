@@ -198,7 +198,7 @@ void Shader::CompileProgram()
 		uniformSpotLight[i].uniformEdge = glGetUniformLocation(shaderID, locBuff);
 	}
 
-	//omni-light shadow variables to the shader variables
+	//omni-light shadow variables connect to the shader variables
 	for (size_t i = 0; i < MAX_SPOT_LIGHTS + MAX_POINT_LIGHTS; i++)
 	{
 		char locBuff[100] = { '\0' };
@@ -211,8 +211,12 @@ void Shader::CompileProgram()
 	}
 
 	uniformDirectionalLightTransform = glGetUniformLocation(shaderID, "directionalLightTransform");
-	uniformTexture = glGetUniformLocation(shaderID, "theTexture");
 	uniformDirectionalShadowMap = glGetUniformLocation(shaderID, "directionalShadowMap");
+
+	//Pointers to the texture uniform variables in shader
+	uniformTextureDiffuse = glGetUniformLocation(shaderID, "textureDiffuse");
+	uniformTextureNormal = glGetUniformLocation(shaderID, "textureNormal");
+
 
 	uniformOmniLightPos = glGetUniformLocation(shaderID, "lightPos");
 	uniformFarPlane = glGetUniformLocation(shaderID, "farPlane");
@@ -322,9 +326,14 @@ void Shader::SetSpotLights(SpotLight * sLight, unsigned int lightCount, unsigned
 }
 
 
-void Shader::SetTexture(GLuint textureUnit)
+void Shader::SetTextureDiffuse(GLuint textureUnit)
 {
-	glUniform1i(uniformTexture, textureUnit);
+	glUniform1i(uniformTextureDiffuse, textureUnit);
+}
+
+void Shader::SetTextureNormal(GLuint textureUnit)
+{
+	glUniform1i(uniformTextureNormal, textureUnit);
 }
 
 void Shader::SetDirectionalShadowMap(GLuint textureUnit)

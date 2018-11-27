@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include <vector>
 
+#include "VertexOperations.h"
 
 class Terrain
 {
@@ -18,7 +19,6 @@ public:
 
 	void CreateTerrain();
 	void RenderTerrain();
-	void CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset);
 
 private:
 

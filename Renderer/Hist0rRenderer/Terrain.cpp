@@ -63,11 +63,18 @@ void Terrain::CreateTerrain()
 			float ypos = (float)heightValue / (float)255 / (float)2 * terrainDisplacementStrength;
 			float zpos = ((float)row / (float)(height - 1)) - 0.5f;
 
+			//Position
 			verticesTerrain.push_back(xpos);
 			verticesTerrain.push_back(ypos);
 			verticesTerrain.push_back(zpos);
+			//Texture coordinates
 			verticesTerrain.push_back(xpos + 0.5f);
 			verticesTerrain.push_back(zpos + 0.5f);
+			//Normals
+			verticesTerrain.push_back(0);
+			verticesTerrain.push_back(0);
+			verticesTerrain.push_back(0);
+			//Tangents
 			verticesTerrain.push_back(0);
 			verticesTerrain.push_back(0);
 			verticesTerrain.push_back(0);
@@ -95,12 +102,13 @@ void Terrain::CreateTerrain()
 		}
 	}
 
-	CalcAverageNormals(&indicesTerrain[0], (unsigned int)indicesTerrain.size(), &verticesTerrain[0], (unsigned int)verticesTerrain.size(), 8, 5); //Calculate average normal vectors for each vertex (Phong shading)
 	
+	VertexOperations::CalcAverageNormals(indicesTerrain, indicesTerrain.size(), verticesTerrain, verticesTerrain.size(), 11, 5);
+	VertexOperations::CalculateTangents(indicesTerrain, indicesTerrain.size(), verticesTerrain, verticesTerrain.size(), 11, 3, 8);
 
 	printf("ver %d, ind %d\n", verticesTerrain.size() / 8, indicesTerrain.size());
 
-	terrainTexture = new Texture(terrainTextureLocation);
+	terrainTexture = new Texture(terrainTextureLocation, TexType::Diffuse);
 	terrainTexture->LoadTexture();
 	terrainMesh = new Mesh();
 	terrainMesh->CreateMesh(&verticesTerrain[0], &indicesTerrain[0], verticesTerrain.size(), indicesTerrain.size());
@@ -110,35 +118,6 @@ void  Terrain::RenderTerrain()
 {
 	terrainTexture->UseTexture();
 	terrainMesh->RenderMesh();
-}
-
-//vLength - size of data for each vertex
-//normalOffset - where the normal data is in vertex data
-void Terrain::CalcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, unsigned int vLength, unsigned int normalOffset) 
-{
-	for (size_t i = 0; i < indiceCount; i += 3) 
-	{		
-		unsigned int in0 = indices[i] * vLength;
-		unsigned int in1 = indices[i + 1] * vLength;
-		unsigned int in2 = indices[i + 2] * vLength;
-		glm::vec3 v1(vertices[in1] - vertices[in0], vertices[in1 + 1] - vertices[in0 + 1], vertices[in1 + 2] - vertices[in0 + 2]);
-		glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
-		glm::vec3 normal = glm::cross(v2, v1);
-		normal = glm::normalize(normal);
-
-		in0 += normalOffset; in1 += normalOffset; in2 += normalOffset;
-		vertices[in0] += normal.x; vertices[in0 + 1] += normal.y; vertices[in0 + 2] += normal.z;
-		vertices[in1] += normal.x; vertices[in1 + 1] += normal.y; vertices[in1 + 2] += normal.z;
-		vertices[in2] += normal.x; vertices[in2 + 1] += normal.y; vertices[in2 + 2] += normal.z;
-	}
-	
-	for (size_t i = 0; i < verticeCount / vLength; i++)
-	{
-		unsigned int nOffset = i * vLength + normalOffset;
-		glm::vec3 vec(vertices[nOffset], vertices[nOffset + 1], vertices[nOffset + 2]);
-		vec = glm::normalize(vec);
-		vertices[nOffset] = vec.x; vertices[nOffset + 1] = vec.y; vertices[nOffset + 2] = vec.z;
-	}
 }
 
 

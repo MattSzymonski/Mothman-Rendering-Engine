@@ -8,5 +8,6 @@ Features:
 - Loading 3d models with Assimp library
 - Directional light shadows
 - Omni-directional light shadows
+- Normal maps
 
 External libraries used: GLFW, GLM, GLEW, Assimp

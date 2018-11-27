@@ -4,18 +4,18 @@
 
 //Taken from vertex shader automatically
 in vec4 vertexColor;
-in vec2 TexCoord;
+in vec2 TexCoords;
 in vec3 Normal;
 //flat in vec3 Normal; //OpenGL keyword to create fast flat shading (should not be used)
 in vec3 FragPos;
 in vec4 DirectionalLightSpacePos; //Where position of a fragment is relative to the light (light point of view)
-
+in mat3 TBN;
 
 out vec4 colour;
 
 const int MAX_POINT_LIGHTS = 3;
 const int MAX_SPOT_LIGHTS = 3;
-
+vec3 normal;
 
 struct Light
 {
@@ -68,7 +68,9 @@ uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 
 
-uniform sampler2D theTexture; //Sampler that uses current Texture Unit (GL_TEXTURE0)
+uniform sampler2D textureDiffuse; //Sampler that uses current Texture Unit (GL_TEXTURE1)
+uniform sampler2D textureNormal; //Sampler that uses current Texture Unit (GL_TEXTURE2)
+
 uniform sampler2D directionalShadowMap; //Shadow map Texture Unit (GL_TEXTURE1)
 uniform OmniShadowMap omniShadowMaps[MAX_POINT_LIGHTS + MAX_SPOT_LIGHTS];
 
@@ -88,11 +90,15 @@ vec3 gridSamplingDisk[20] = vec3[] //Offset directions for 20 samples for PCF ed
 
 // ----------------------- Common -----------------------------
 
+
+
+
+
 vec4 CalcLightByDirection(Light light, vec3 direction, float shadowFactor) //All shadows 
 {
 	vec4 ambientColour = vec4(light.colour, 1.0f) * light.ambientIntensity;
 
-	float diffuseFactor = max(dot(normalize(Normal), normalize(direction)), 0.0f);  //Factor of light intensity calculated from angle between direction of light incidence and normal vector
+	float diffuseFactor = max(dot(normalize(normal), normalize(direction)), 0.0f);  //Factor of light intensity calculated from angle between direction of light incidence and normal vector
 	vec4 diffuseColour = vec4(light.colour * light.diffuseIntensity * diffuseFactor, 1.0f);  //Color of fragment after light calculation
 
 	vec4 specularColour = vec4(0, 0, 0, 0);
@@ -100,7 +106,7 @@ vec4 CalcLightByDirection(Light light, vec3 direction, float shadowFactor) //All
 	if (diffuseFactor > 0.0f) //If fragment is not being hit by diffuse light (angle >= 90) then it also is not being hit by specular light
 	{
 		vec3 fragToCamera = normalize(cameraPosition - FragPos); //Vector of direction between camera and fragment
-		vec3 reflectedVertex = normalize(reflect(direction, normalize(Normal))); //Vector of direction of reflected light
+		vec3 reflectedVertex = normalize(reflect(direction, normalize(normal))); //Vector of direction of reflected light
 
 		float specularFactor = dot(fragToCamera, reflectedVertex); //Angle between reflected light direction and camera looking direction
 		if (specularFactor > 0.0f)
@@ -161,7 +167,7 @@ float CalcDirectionalShadowFactor(vec4 DirectionalLightSpacePos) //Directional s
 
 	float currentDepth = projCoords.z; //Distance(depth) from the light to hitpoint(fragment position)
 
-	vec3 normal = normalize(Normal);
+	//vec3 normal = normalize(Normal);
 	vec3 lightDir = normalize(directionalLight.direction);
 
 	float bias = max(0.005 * (1.0 - dot(normal, lightDir)), 0.0005);
@@ -242,9 +248,14 @@ vec4 CalcSpotLights()
 
 void main()
 {
+	//Additional normals calculation for normal mapping
+	normal = texture(textureNormal, TexCoords).rgb;
+	normal = normalize(normal * 2.0 - 1.0);
+	normal = normalize(TBN * normal);
+
 	vec4 finalColour = CalcDirectionalLight(DirectionalLightSpacePos);
 	finalColour += CalcPointLights();
 	finalColour += CalcSpotLights();
 
-	colour = texture(theTexture, TexCoord) * finalColour; //Final colour of texture affected by light
+	colour = texture(textureDiffuse, TexCoords) * finalColour; //Final colour of texture affected by light
 }
