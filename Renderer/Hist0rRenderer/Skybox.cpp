@@ -84,7 +84,7 @@ void Skybox::DrawSkybox(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	viewMatrix = glm::mat4(glm::mat3(viewMatrix));
 
-	glDepthMask(GL_FALSE);
+	glDepthMask(GL_FALSE); //Disable depth mask for skybox rendering, so the cube will look like it is always behind everything
 
 	skyShader->UseShader();
 
