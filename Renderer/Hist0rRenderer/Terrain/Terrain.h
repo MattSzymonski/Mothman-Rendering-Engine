@@ -1,12 +1,12 @@
 #pragma once
 
 #include <glm\glm.hpp>
-#include "Mesh.h"
-#include "Texture.h"
+#include "../Mesh.h"
+#include "../Texture.h"
 #include <vector>
 
-#include "VertexOperations.h"
-#include "CommonValues.h"
+#include "../VertexOperations.h"
+#include "../CommonValues.h"
 
 class Terrain
 {

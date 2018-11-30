@@ -37,6 +37,23 @@ void Shader::CreateFromFiles(const char* vertexLocation, const char* geometryLoc
 	CompileShader(vertexCode, geometryCode, fragmentCode);
 }
 
+void Shader::CreateFromFiles(const char * vertexLocation, const char * tessellationControlLocation, const char * tessellationEvaluationLocation, const char * geometryLocation, const char * fragmentLocation)
+{
+	std::string vertexString = ReadFile(vertexLocation);
+	std::string tessellationControlString = ReadFile(tessellationControlLocation);
+	std::string tessellationEvaluationString = ReadFile(tessellationEvaluationLocation);
+	std::string geometryString = ReadFile(geometryLocation);
+	std::string fragmentString = ReadFile(fragmentLocation);
+	const char* vertexCode = vertexString.c_str();
+	const char* tessellationControlCode = tessellationControlString.c_str();
+	const char* tessellationEvaluationCode = tessellationEvaluationString.c_str();
+	const char* geometryCode = geometryString.c_str();
+	const char* fragmentCode = fragmentString.c_str();
+
+	CompileShader(vertexCode, tessellationControlCode, tessellationEvaluationCode, geometryCode, fragmentCode);
+
+}
+
 void Shader::Validate()
 {
 	GLint result = 0;
@@ -106,6 +123,26 @@ void Shader::CompileShader(const char* vertexCode, const char* geometryCode, con
 	AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
 
 	CompileProgram();
+}
+
+void Shader::CompileShader(const char * vertexCode, const char * tessellationControlCode, const char * tessellationEvaluationCode, const char * geometryCode, const char * fragmentCode) //For terrain
+{
+	shaderID = glCreateProgram();
+
+	if (!shaderID)
+	{
+		printf("Error creating shader program!\n");
+		return;
+	}
+	//https://github.com/fynnfluegge/oreon-engine/search?p=8&q=%23version+430&unscoped_q=%23version+430
+	AddShader(shaderID, vertexCode, GL_VERTEX_SHADER);
+	AddShader(shaderID, tessellationControlCode, GL_TESS_CONTROL_SHADER);
+	AddShader(shaderID, tessellationEvaluationCode, GL_TESS_EVALUATION_SHADER);
+	AddShader(shaderID, geometryCode, GL_GEOMETRY_SHADER);
+	AddShader(shaderID, fragmentCode, GL_FRAGMENT_SHADER);
+
+	CompileProgram();
+
 }
 
 void Shader::CompileProgram()
@@ -402,4 +439,35 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 Shader::~Shader()
 {
 	ClearShader();
+}
+
+void Shader::UpdateTerrainUniforms(TerrainNode *node, glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
+{
+	glUniform3f(terrain_uniformCameraPosition, node->cameraPosition.x, node->cameraPosition.y, node->cameraPosition.z);
+	//glUniform3f(terrain_uniformViewProjection, ); //TODO
+
+
+
+	TerrainNode2 *tn = dynamic_cast<TerrainNode2*>(node);
+	TerrainConfig config = tn->config;
+	GLuint lod = tn->lod;
+	glm::vec2 index = tn->index;
+	GLfloat gap = tn->gap;
+	glm::vec2 location = tn->location;
+
+	//glUniformMatrix4fv(terrain_uniformLocalMatrix, 1, GL_FALSE, node.worldPosition  glm::value_ptr(projectionMatrix));
+	//glUniformMatrix4fv(terrain_uniformWorldMatrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+	glUniform1f(terrain_uniformScaleY, config.scaleY);
+	glUniform1f(terrain_uniformLod, lod);
+	glUniform2f(terrain_uniformIndex, index.x, index.y);
+	glUniform1f(terrain_uniformGap, gap);
+	glUniform2f(terrain_uniformGap, location.x, location.y);
+
+	for (size_t i = 0; i < 8; i++)
+	{
+		glUniform1f(terrain_uniformMorphArea[i], config.lodMorphingArea[i]);
+	}
+
+
 }

@@ -169,12 +169,19 @@
     <ClInclude Include="Lights\PointLight.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Lights\OmniShadowMap.h" />
+    <ClInclude Include="Terrain\TerrainNode2.h" />
+    <ClInclude Include="Terrain\PatchVBO.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Lights\SpotLight.h" />
     <ClInclude Include="Lights\ShadowMap.h" />
     <ClInclude Include="Skybox.h" />
-    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="Terrain\TerrainQuadtree.h" />
+    <ClInclude Include="Terrain\Terra.h" />
+    <ClInclude Include="Terrain\TerrainConfig.h" />
+    <ClInclude Include="Terrain\TerrainNode.h" />
+    <ClInclude Include="Terrain\Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="Terrain\VBO.h" />
     <ClInclude Include="VertexOperations.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -188,12 +195,19 @@
     <ClCompile Include="Hist0rRenderer.cpp" />
     <ClCompile Include="Lights\PointLight.cpp" />
     <ClCompile Include="Lights\OmniShadowMap.cpp" />
+    <ClCompile Include="Terrain\TerrainNode2.cpp" />
+    <ClCompile Include="Terrain\PatchVBO.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Lights\SpotLight.cpp" />
     <ClCompile Include="Lights\ShadowMap.cpp" />
     <ClCompile Include="Skybox.cpp" />
-    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="Terrain\TerrainQuadtree.cpp" />
+    <ClCompile Include="Terrain\Terra.cpp" />
+    <ClCompile Include="Terrain\TerrainConfig.cpp" />
+    <ClCompile Include="Terrain\TerrainNode.cpp" />
+    <ClCompile Include="Terrain\Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="Terrain\VBO.cpp" />
     <ClCompile Include="VertexOperations.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
