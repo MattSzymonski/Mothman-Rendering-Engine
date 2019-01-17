@@ -2,17 +2,18 @@
 
 layout (location = 0) in vec2 position0;
 
-uniform vec3 cameraPosition
+out vec2 mapCoord_TC;
+
+uniform vec3 cameraPosition;
+uniform mat4 localMatrix;
+uniform mat4 worldMatrix;
 uniform float scaleY;
 uniform int lod;
 uniform vec2 index;
-uniform mat4 localMatrix;
-uniform mat4 worldMatrix;
 uniform float gap;
 uniform vec2 location;
-
 uniform int lod_morph_area[8];
-
+uniform sampler2D heightmap;
 
 float morphLatitude(vec2 position)
 {
@@ -50,17 +51,17 @@ float morphLongitude(vec2 position)
 		if (morph > 0)
 			return -morph;
 	}
-	else if (index == vec2(1,0)){
+	if (index == vec2(1,0)){
 		float morph = frac.y - (gap - frac.x);
 		if (morph > 0)
 			return morph;
 	}
-	else if (index == vec2(0,1)){
+	if (index == vec2(0,1)){
 		float morph = gap - frac.y - frac.x;
 		if (morph > 0)
 			return -morph;
 	}
-	else if (index == vec2(1,1)){
+	if (index == vec2(1,1)){
 		float morph = frac.x - frac.y;
 		if (morph > 0)
 			return morph;
@@ -77,6 +78,7 @@ vec2 morph(vec2 localPosition, int morph_area){
 	float distLatitude;
 	float distLongitude;
 	
+	// Setting latitude and longitude of the quad depending on its index so on which child it is
 	if (index == vec2(0,0)) {
 		fixPointLatitude = location + vec2(gap,0);
 		fixPointLongitude = location + vec2(0,gap);
@@ -115,8 +117,13 @@ void main()
 {
 	vec2 localPosition = (localMatrix * vec4(position0.x,0,position0.y,1)).xz;
 	
-	if (lod > 0)
-		localPosition += morph(localPosition, lod_morph_area[lod-1]);
-	
-	gl_Position = worldMatrix * vec4(localPosition.x,0,localPosition.y,1);
+	// Morphing implementation(calculating new position for vertices that are in morph area/range. Without this quads will only be replaced with smaller quads. 
+	if (lod > 0) { 
+		localPosition += morph(localPosition, lod_morph_area[lod-1]); // Translate position by morphing vector 
+	}
+			
+	float height = texture(heightmap, localPosition).r;
+	mapCoord_TC = localPosition;
+			
+	gl_Position = worldMatrix * vec4(localPosition.x, height, localPosition.y,1);
 }

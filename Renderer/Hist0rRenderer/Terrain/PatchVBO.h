@@ -11,9 +11,8 @@ public:
 	GLuint VAO;
 	GLuint size;
 
-	void Allocate(float *vertices, unsigned int verticesLength, unsigned int patchSize);
+	void Allocate(GLfloat *vertices, unsigned int numOfVertices, unsigned int verticesLength, unsigned int patchSize);
 	void Draw();
-	void Delete();
 
 	~PatchVBO();
 };

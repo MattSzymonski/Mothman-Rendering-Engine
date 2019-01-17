@@ -17,10 +17,11 @@
 #include "Lights/PointLight.h"
 #include "Lights/SpotLight.h"
 
-#include "Terrain\TerrainNode2.h"
 #include "Terrain\TerrainNode.h"
-
 #include "Terrain\TerrainConfig.h"
+
+class TerrainNode;
+class TerrainConfig;
 
 class Shader
 {
@@ -68,7 +69,7 @@ public:
 	~Shader();
 
 
-	void UpdateTerrainUniforms(TerrainNode node, glm::mat4 projectionMatrix, glm::mat4 viewMatrix);
+	void UpdateTerrainUniforms(TerrainNode *node);
 
 private:
 	int pointLightCount;
@@ -82,11 +83,11 @@ private:
 		uniformOmniLightPos, uniformFarPlane;
 
 	//Terrain
-	GLuint terrain_uniformLocalMatrix, terrain_uniformWorldMatrix, terrain_uniformScaleY, terrain_uniformIndex, terrain_uniformGap, terrain_uniformLod, terrain_uniformLocation;
+	GLuint terrain_uniformCameraPosition, terrain_uniformScaleY, terrain_uniformLod, terrain_uniformIndex, terrain_uniformLocalMatrix, terrain_uniformWorldMatrix, terrain_uniformGap, terrain_uniformLocation;
 	GLuint terrain_uniformMorphArea[8];
-	GLuint terrain_uniformCameraPosition, terrain_uniformViewProjection;
-
-
+	GLuint terrain_uniformViewProjection;
+	GLuint terrain_tessellationFactor, terrain_tessellationSlope, terrain_tessellationShift;
+	GLuint terrain_heightmap;
 
 
 	GLuint uniformLightMatrices[6];

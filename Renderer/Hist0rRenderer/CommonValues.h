@@ -11,6 +11,11 @@ const int SKYBOX_TEXUNIT = 0;
 const int DIFFUSE_TEXUNIT = 1;
 const int NORMAL_TEXUNIT = 2;
 const int DIR_SHADOWMAP_TEXUNIT = 3;
-const int OMNIDIR_SHADOWMAP_TEXUNIT = 4; //Range between 4 and omnilights count
+const int HEIGHTMAP_TEXUNIT = 4;
+const int OMNIDIR_SHADOWMAP_TEXUNIT = 5; //Range between 4 and omnilights count
+
+
+const int WINDOW_SIZE_H = 1400;
+const int WINDOW_SIZE_V = 800;
 
 #endif

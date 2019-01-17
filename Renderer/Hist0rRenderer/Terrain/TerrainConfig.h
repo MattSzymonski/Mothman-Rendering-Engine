@@ -1,22 +1,34 @@
 #pragma once
+#include <glm\glm.hpp>
+#include "..\Shader.h"
+
+class Shader;
+
 class TerrainConfig
 {
 public:
+	
+	// Values
+	int rootNodes;
+
+	GLfloat scaleY;
+	GLfloat scaleXZ;
+
+	GLuint lodRange[8];
+	GLuint lodMorphingArea[8];
+
+	GLuint tessellationFactor;
+	GLfloat tessellationSlope;
+	GLfloat tessellationShift;
+
+	const char* heightmapLocation;
+	const char* normalTextureLocation;
+
+	// Other
 	TerrainConfig();
-	
-	int scaleY;
-	int scaleXZ;
-
-	int positionY;
-	int positionXZ;
-
-	int lodRange[8];
-	int lodMorphingArea[8];
-
+	Shader* terrainShader;
+	int SetMorphingArea(int lod);
+	void SetLodRange(int index, GLuint lod_range);
 	~TerrainConfig();
-private:
-	
-
-
 };
 

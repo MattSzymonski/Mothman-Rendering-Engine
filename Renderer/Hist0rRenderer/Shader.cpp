@@ -265,6 +265,35 @@ void Shader::CompileProgram()
 		snprintf(locBuff, sizeof(locBuff), "lightMatrices[%d]", i);
 		uniformLightMatrices[i] = glGetUniformLocation(shaderID, locBuff);
 	}
+
+
+
+	//Terrain
+	terrain_uniformCameraPosition = glGetUniformLocation(shaderID, "cameraPosition");
+	terrain_uniformLocalMatrix = glGetUniformLocation(shaderID, "localMatrix");
+	terrain_uniformWorldMatrix = glGetUniformLocation(shaderID, "worldMatrix");
+	terrain_uniformScaleY = glGetUniformLocation(shaderID, "scaleY");
+	terrain_uniformLod = glGetUniformLocation(shaderID, "lod");
+	terrain_uniformIndex = glGetUniformLocation(shaderID, "index");
+	terrain_uniformGap = glGetUniformLocation(shaderID, "gap");
+	terrain_uniformLocation = glGetUniformLocation(shaderID, "location");
+
+	for (size_t i = 0; i < 8; i++)
+	{
+		char locBuff[100] = { '\0' };
+
+		snprintf(locBuff, sizeof(locBuff), "lod_morph_area[%d]", i);
+		terrain_uniformMorphArea[i] = glGetUniformLocation(shaderID, locBuff);
+	}
+
+	terrain_tessellationFactor = glGetUniformLocation(shaderID, "tessellationFactor");
+	terrain_tessellationSlope = glGetUniformLocation(shaderID, "tessellationSlope");
+	terrain_tessellationShift = glGetUniformLocation(shaderID, "tessellationShift");
+
+	terrain_uniformViewProjection = glGetUniformLocation(shaderID, "m_ViewProjection"); //In terrain geometry shader
+	terrain_heightmap = glGetUniformLocation(shaderID, "heightmap");
+
+
 }
 
 GLuint Shader::GetProjectionLocation()
@@ -363,6 +392,7 @@ void Shader::SetSpotLights(SpotLight * sLight, unsigned int lightCount, unsigned
 }
 
 
+
 void Shader::SetTextureDiffuse(GLuint textureUnit)
 {
 	glUniform1i(uniformTextureDiffuse, textureUnit);
@@ -429,9 +459,17 @@ void Shader::AddShader(GLuint theProgram, const char* shaderCode, GLenum shaderT
 	if (!result)
 	{
 		glGetShaderInfoLog(theShader, sizeof(eLog), NULL, eLog);
+
+		if (shaderType == GL_VERTEX_SHADER) { printf("Vertex - "); }
+		if (shaderType == GL_TESS_CONTROL_SHADER) { printf("TessCont - "); }
+		if (shaderType == GL_TESS_EVALUATION_SHADER) { printf("TessEval - "); }
+		if (shaderType == GL_GEOMETRY_SHADER) { printf("Geometry - "); }
+		if (shaderType == GL_FRAGMENT_SHADER) { printf("Fragment - "); }
+
 		printf("Error compiling the %d shader: '%s'\n", shaderType, eLog);
 		return;
-	}
+}
+
 
 	glAttachShader(theProgram, theShader);
 }
@@ -441,33 +479,36 @@ Shader::~Shader()
 	ClearShader();
 }
 
-void Shader::UpdateTerrainUniforms(TerrainNode *node, glm::mat4 projectionMatrix, glm::mat4 viewMatrix)
+
+void Shader::UpdateTerrainUniforms(TerrainNode *node)
 {
-	glUniform3f(terrain_uniformCameraPosition, node->cameraPosition.x, node->cameraPosition.y, node->cameraPosition.z);
-	//glUniform3f(terrain_uniformViewProjection, ); //TODO
 
+	glUniform3f(terrain_uniformCameraPosition, node->camera->GetCameraPosition().x, node->camera->GetCameraPosition().y, node->camera->GetCameraPosition().z);
+	glUniformMatrix4fv(terrain_uniformViewProjection, 1, GL_FALSE, glm::value_ptr(node->camera->GetProjectionMatrix() * node->camera->GetViewMatrix())); 
 
+	GLuint lod = node->lod;
+	glm::vec2 index = node->index;
+	GLfloat gap = node->gap;
+	glm::vec2 location = node->location;
 
-	TerrainNode2 *tn = dynamic_cast<TerrainNode2*>(node);
-	TerrainConfig config = tn->config;
-	GLuint lod = tn->lod;
-	glm::vec2 index = tn->index;
-	GLfloat gap = tn->gap;
-	glm::vec2 location = tn->location;
+	glUniformMatrix4fv(terrain_uniformLocalMatrix, 1, GL_FALSE, glm::value_ptr(node->localMatrix));
+	glUniformMatrix4fv(terrain_uniformWorldMatrix, 1, GL_FALSE, glm::value_ptr(node->worldMatrix));
 
-	//glUniformMatrix4fv(terrain_uniformLocalMatrix, 1, GL_FALSE, node.worldPosition  glm::value_ptr(projectionMatrix));
-	//glUniformMatrix4fv(terrain_uniformWorldMatrix, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-
-	glUniform1f(terrain_uniformScaleY, config.scaleY);
-	glUniform1f(terrain_uniformLod, lod);
+	glUniform1f(terrain_uniformScaleY, node->config->scaleY);
+	glUniform1i(terrain_uniformLod, lod);
 	glUniform2f(terrain_uniformIndex, index.x, index.y);
 	glUniform1f(terrain_uniformGap, gap);
-	glUniform2f(terrain_uniformGap, location.x, location.y);
+	glUniform2f(terrain_uniformLocation, location.x, location.y);
 
-	for (size_t i = 0; i < 8; i++)
+	for (int i = 0; i < 8; i++)
 	{
-		glUniform1f(terrain_uniformMorphArea[i], config.lodMorphingArea[i]);
+		glUniform1i(terrain_uniformMorphArea[i], node->config->lodMorphingArea[i]);
 	}
 
+	glUniform1i(terrain_tessellationFactor, node->config->tessellationFactor);
+	glUniform1f(terrain_tessellationSlope, node->config->tessellationSlope);
+	glUniform1f(terrain_tessellationShift, node->config->tessellationShift);
 
+	glUniform1i(terrain_heightmap, HEIGHTMAP_TEXUNIT); //Not necessarily need to be updated for each node
+	glUniform1i(uniformTextureNormal, NORMAL_TEXUNIT); //Not necessarily need to be updated for each node
 }

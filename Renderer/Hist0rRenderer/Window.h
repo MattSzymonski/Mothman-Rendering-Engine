@@ -5,6 +5,7 @@
 
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+#include "CommonValues.h"
 
 class Window
 {
@@ -26,6 +27,8 @@ public:
 	GLfloat getYChange(); //Get y change of mouse position, used by camera
 
 	void swapBuffers() { glfwSwapBuffers(mainWindow); }
+
+	GLFWwindow* GetWindow();
 
 	~Window();
 

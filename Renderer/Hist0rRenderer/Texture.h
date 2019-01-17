@@ -3,7 +3,7 @@
 #include <GL\glew.h>
 #include "CommonValues.h"
 
-enum TexType { None, Diffuse, Normal };
+enum TexType { None, Diffuse, Normal, Heightmap };
 
 class Texture
 {

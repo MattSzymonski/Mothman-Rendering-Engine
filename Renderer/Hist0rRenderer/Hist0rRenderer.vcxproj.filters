@@ -63,13 +63,7 @@
     <ClInclude Include="Skybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain\Terrain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Terrain\TerrainNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain\Terra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Terrain\TerrainConfig.h">
@@ -78,13 +72,10 @@
     <ClInclude Include="Terrain\TerrainQuadtree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain\VBO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Terrain\PatchVBO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Terrain\TerrainNode2.h">
+    <ClInclude Include="Terrain\Terrain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,13 +128,7 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain\Terrain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Terrain\TerrainNode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain\Terra.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Terrain\TerrainConfig.cpp">
@@ -155,10 +140,7 @@
     <ClCompile Include="Terrain\PatchVBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Terrain\VBO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain\TerrainNode2.cpp">
+    <ClCompile Include="Terrain\Terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

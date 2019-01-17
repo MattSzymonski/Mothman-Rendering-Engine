@@ -2,105 +2,60 @@
 
 
 
-TerrainQuadtree::TerrainQuadtree(TerrainConfig config) : TerrainNode()
+TerrainQuadtree::TerrainQuadtree(Terrain* terrain, TerrainConfig* config, Camera* camera)
 {
-	rootNodes = 8;
-	
-	//Load vertex data to GPU only once. Every terrain node will be using the same data on the GPU
-	buffer = PatchVBO();
-	buffer.Allocate(GenerateVertexData(), 2, 16);
+	this->terrain = terrain;
+	this->config = config;
+	this->camera = camera;
 
+	buffer = new PatchVBO(); //Load vertex data to GPU only once. Every terrain node will be using the same data on the GPU
+	buffer->Allocate(GenerateVertexData(), 16, 2, 16);
 
-	for (size_t i = 0; i < rootNodes; i++)
+	for (int i = 0; i < this->config->rootNodes; i++)
 	{
-		for (size_t j = 0; j < rootNodes; j++)
+		for (int j = 0; j < this->config->rootNodes; j++)
 		{
-			AddChild(new TerrainNode2(buffer, config, glm::vec2(i/rootNodes, j/rootNodes), 0, glm::vec2(i,j)));
+			TerrainNode *newChild = new TerrainNode(this->config, buffer, this->camera, glm::vec2((GLfloat)i / (GLfloat)this->config->rootNodes, (GLfloat)j / (GLfloat)this->config->rootNodes), 0, glm::vec2(i, j));
+			terrainNodes.push_back(newChild);
 		}
 	}
 
-	
-	worldScale = glm::vec3(config.scaleXZ, config.scaleY, config.scaleXZ);
-	worldPosition = glm::vec3(-config.positionXZ/2, 0, -config.positionXZ/2);
-	
+	worldMatrix = glm::translate(worldMatrix, glm::vec3(-this->config->scaleXZ / (GLfloat)2, 0, -this->config->scaleXZ / (GLfloat)2));
+	worldMatrix = glm::scale(worldMatrix, glm::vec3(this->config->scaleXZ, this->config->scaleY, this->config->scaleXZ));
 }
 
 
 GLfloat* TerrainQuadtree::GenerateVertexData()
 {
+	GLfloat* verticesTerrain = new GLfloat[32];
 	
-	GLfloat verticesTerrain[32];
-
 	int index = 0;
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 0;
-
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 0.333;
-
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 0.666;
-
-	verticesTerrain[index++] = 0;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 0.333;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 0.666;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 1;
-	verticesTerrain[index++] = 1;
-
-	/*
-	verticesTerrain[index++] = glm::vec2(0, 0); 
-	verticesTerrain[index++] = glm::vec2(0.333, 0);
-	verticesTerrain[index++] = glm::vec2(0.666, 0);
-	verticesTerrain[index++] = glm::vec2(1, 0);
-
-	verticesTerrain[index++] = glm::vec2(0, 0.333);
-	verticesTerrain[index++] = glm::vec2(0.333, 0.333);
-	verticesTerrain[index++] = glm::vec2(0.666, 0.333);
-	verticesTerrain[index++] = glm::vec2(1, 0.333);
-
-	verticesTerrain[index++] = glm::vec2(0, 0.666);
-	verticesTerrain[index++] = glm::vec2(0.333, 0.666);
-	verticesTerrain[index++] = glm::vec2(0.666, 0.666);
-	verticesTerrain[index++] = glm::vec2(1, 0.666);
-
-	verticesTerrain[index++] = glm::vec2(0, 1);
-	verticesTerrain[index++] = glm::vec2(0.333, 1);
-	verticesTerrain[index++] = glm::vec2(0.666, 1);
-	verticesTerrain[index++] = glm::vec2(1, 1);
-	*/
-
+	for (int i = 0; i < 4; i++)
+	{
+		for (int u = 0; u < 4; u++)
+		{
+			if(u != 3) { verticesTerrain[index++] = 0.333f * u; } else { verticesTerrain[index++] = 1; }
+			if(i != 3) { verticesTerrain[index++] = 0.333f * i; } else { verticesTerrain[index++] = 1; }
+		}
+	}
 
 	return verticesTerrain;
 }
 
-void TerrainQuadtree::UpdateQuadtree()
+void TerrainQuadtree::Update()
 {
-	for (size_t i = 0; i < children.size(); i++)
+	for (unsigned int i = 0; i < terrainNodes.size(); i++)
 	{
-		children[i]->UpdateQuadtree();
+		terrainNodes[i]->Update();
 	}
+}
 
+void TerrainQuadtree::Render()
+{
+	for (unsigned int i = 0; i < terrainNodes.size(); i++)
+	{
+		terrainNodes[i]->Render();
+	}
 }
 
 

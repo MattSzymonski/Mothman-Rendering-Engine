@@ -1,32 +1,43 @@
+
+/*
+Terrain has quadtree which has 8 child nodes of lod 0
+
+Each update:
+If node is a leaf and its distance to the camera is smaller than the value of lod for its lod level it creates 4 childrens with lod level incremented by 1.
+All nodes use same buffer (VBO) on GPU. Each node updates buffer with its own values before draw.
+
+Morphing of edges on the transition between lod levels is done by vertex shader.
+
+
+*/
+
 #pragma once
 
-#include <glm\glm.hpp>
-#include "../Mesh.h"
-#include "../Texture.h"
-#include <vector>
-
-#include "../VertexOperations.h"
-#include "../CommonValues.h"
+#include "TerrainConfig.h"
+#include "TerrainQuadtree.h"
+#include "..\Camera.h"
 
 class Terrain
 {
 public:
+
 	Terrain();
+	void Init(TerrainConfig* config, Camera* camera);
+	void UpdateTerrain();
+	void Render();
+
+	TerrainConfig *config;
+	Texture  *heightmap;
+	Texture *normalTexture;
+
 	~Terrain();
-
-	Terrain(const char* terrainHeightMapLocation, const char* terrainTextureLocation, float terrainDisplacementStrength);
-
-	void CreateTerrain();
-	void RenderTerrain();
+	
 
 private:
-
-	int width, height, bitDepth;
-
-	float terrainDisplacementStrength;
-	Mesh* terrainMesh;
-	Texture* terrainTexture;
-	const char* terrainTextureLocation;
-	const char* terrainHeightMapLocation;
+	TerrainQuadtree *quadtree;
+	
+	Camera *camera;
+	glm::vec3 cameraPos;
+	glm::vec3 cameraForward;
 };
 

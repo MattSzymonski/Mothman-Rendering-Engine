@@ -2,12 +2,12 @@
 
 Camera::Camera()
 {
-
 }
 
 Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
 {
 	position = startPosition;
+	
 	worldUp = startUp;
 	yaw = startYaw;
 	pitch = startPitch;
@@ -47,7 +47,7 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 	}
 }
 
-void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
+void Camera::mouseControl(GLfloat xChange, GLfloat yChange, GLfloat deltaTime)
 {
 	xChange *= turnSpeed;
 	yChange *= turnSpeed;
@@ -67,15 +67,36 @@ void Camera::mouseControl(GLfloat xChange, GLfloat yChange)
 	update();
 }
 
-glm::vec3 Camera::getCameraPosition()
+glm::vec3 Camera::GetCameraPosition()
 {
 	return position;
 }
 
-glm::mat4 Camera::calculateViewMatrix()
+void Camera::CalculateViewMatrix()
 {
-	return glm::lookAt(position, position + forward, up);
+	viewMatrix = glm::lookAt(position, position + forward, up);
 }
+
+glm::mat4 Camera::GetViewMatrix()
+{
+	return viewMatrix;
+}
+
+void Camera::CalculateProjectionMatrix(float FOV, GLfloat windowBufferWidth, GLfloat windowBufferHeight, float nearPlane, float farPlane)
+{
+	projectionMatrix = glm::perspective(glm::radians(FOV), windowBufferWidth / windowBufferHeight, nearPlane, farPlane); //(field of view, aspect ratio, draw distance min, draw distance max)
+}
+
+glm::mat4 Camera::GetProjectionMatrix()
+{
+	return projectionMatrix;
+}
+
+glm::vec3 Camera::GetForward()
+{
+	return forward;
+}
+
 
 void Camera::update()
 {

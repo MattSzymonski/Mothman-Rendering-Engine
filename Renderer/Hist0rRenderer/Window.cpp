@@ -1,11 +1,12 @@
 #include "Window.h"
 
+
 using namespace std;
 
 Window::Window()
 {
-	width = 800;
-	height = 600;
+	width = WINDOW_SIZE_H;
+	height = WINDOW_SIZE_V;
 
 	for (size_t i = 0; i < 1024; i++) //Initialize a list where state of user inputs will be stored
 	{
@@ -154,6 +155,11 @@ GLfloat Window::getYChange()
 	return theChange;
 }
 
+
+GLFWwindow * Window::GetWindow()
+{
+	return mainWindow;
+}
 
 Window::~Window()
 {

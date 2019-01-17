@@ -36,8 +36,11 @@ bool Texture::LoadTexture()
 	//Setting parameters of texture
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); //Wrapping x-axis
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); //Wrapping y-axis
+
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //Zoomed in
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //Zoomed out
+	
+	
 
 
 	if (bitDepth == 3)
@@ -72,6 +75,10 @@ void Texture::UseTexture()
 	else if (texType == TexType::Normal)
 	{
 		glActiveTexture(GL_TEXTURE0 + NORMAL_TEXUNIT);
+	}
+	else if (texType == TexType::Heightmap)
+	{
+		glActiveTexture(GL_TEXTURE0 + HEIGHTMAP_TEXUNIT);
 	}
 
 	glBindTexture(GL_TEXTURE_2D, textureID); //Binding texture with given ID to Texture Unit in line above

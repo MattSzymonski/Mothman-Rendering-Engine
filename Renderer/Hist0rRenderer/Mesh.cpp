@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-
+#include <iostream>
 
 Mesh::Mesh()
 {
@@ -12,6 +12,8 @@ Mesh::Mesh()
 
 void Mesh::CreateMesh(float *vertices, unsigned int *indices, unsigned int numOfVertices, unsigned int numOfIndices)
 {
+
+
 	indexCount = numOfIndices;
 
 	glGenVertexArrays(1, &VAO); //Creates one identifier for VAO and stores it in VAO variable (Allocates space for VAOs in GPU)
@@ -29,9 +31,9 @@ void Mesh::CreateMesh(float *vertices, unsigned int *indices, unsigned int numOf
 
 	//Passing values into vertex shader (layout (location = 0) in vec3 pos)
 	//Nr, how many values to pass, , , total values for each vertex, how many skip before passing 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 11, (void*)(sizeof(vertices[0]) * 0)); //Takes 3 first values of vertices then skips 5 and takes another 3, to the end (position coordinates)
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 11, (void*)(sizeof(vertices[0]) * 0)); //Takes 3 first values of vertices then skips 11 and takes another 3, to the end (position coordinates)
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 11, (void*)(sizeof(vertices[0]) * 3)); //Skips 3 first values of vertices then takes 2 and skips next 3 and takes another 2, to the end (UV coordinates)
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 11, (void*)(sizeof(vertices[0]) * 3)); //Skips 3 first values of vertices then takes 2 and skips next 11 and takes another 2, to the end (UV coordinates)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 11, (void*)(sizeof(vertices[0]) * 5)); //(Normal coordinates)
 	glEnableVertexAttribArray(2);
