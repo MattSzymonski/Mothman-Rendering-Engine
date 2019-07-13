@@ -13,7 +13,7 @@ Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning pur
 - Directional, point and spot lights
 - Directional light shadows
 - Omni-directional light shadows
-- Blinn-phong shading model
+- Phong shading model
 - Textures
 - Simple materials
 - Normal maps
@@ -32,7 +32,6 @@ Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning pur
 
 ## Notes
 Please compile the project with x86 as target platform
-<img src="https://img.shields.io/github/repo-size/MattSzymonski/MothmanRenderingEngine.svg?style=popout">
 
 <p align="center">
   <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/MothmanRenderingEngineFooter.png" img width=100% align="left">
