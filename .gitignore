@@ -8,6 +8,8 @@
 *.sln.docstates
 
 NotGit/
+# !ExternalLibraries/*
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -24,7 +26,7 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
-!ExternalLibraries/*
+
 
 # Visual Studio 2015 cache/options directory
 .vs/
