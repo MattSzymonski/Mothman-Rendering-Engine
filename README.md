@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/MothmanRenderingEngineHeader.png" img width=100% align="left">
+  <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/MothmanRenderingEngineHeader.png" img width=100%>
 </p>
 
 Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning purposes.
@@ -22,6 +22,9 @@ Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning pur
 - Resizable window
 
 ## Screenshots
+<p align="center">
+  <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/Screenshots/MRE_Screenshot_1.png" img width=100%>
+</p>
 
 ## Third Party Dependencies
 - GLFW
@@ -34,5 +37,5 @@ Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning pur
 Please compile the project with x86 as target platform
 
 <p align="center">
-  <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/MothmanRenderingEngineFooter.png" img width=100% align="left">
+  <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/MothmanRenderingEngineFooter.png" img width=100%>
 </p>
