@@ -158,3 +158,92 @@ void Window::CheckWindowSize(void(*CreateRenderBuffersPtr)(), void(*DeleteRender
 	DeleteRenderBuffersPtr();
 	CreateRenderBuffersPtr();
 }
+
+//----------------------------------------------------------------------------------------------------------
+
+//SPECIFIC MODEL OPERATIONS
+glm::mat4 model;
+
+//Tetrahedron
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(0.0f, 4.0f, -2.5f)); //Transforming identity matrix into translation matrix
+//glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model)); //Set uniform variable value in shader (uniform variable in shader, count, transpose?, pointer to matrix)
+shader->SetUniform("u_model", model);
+
+brickTexture.UseTexture();
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+meshList[0]->RenderMesh();
+
+//Floor
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+dirtTexture.UseTexture();
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+floorModel.RenderModel();
+//meshList[1]->RenderMesh(); //Old verices floor
+
+//TanTest
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(6.0f, 1.0f, -0.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_TanTest.RenderModel();
+
+//CubeTest
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(0.0f, 0.5f, 1.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_CubeTan.RenderModel();
+
+//Test Human
+model = glm::mat4(); //Creating identity matrix
+//model = glm::translate(model, glm::vec3(0.0f + movementCurrentTranslation_Human, 0.0f, -0.0f)); //Transforming identity matrix into translation matrix
+model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_Human.RenderModel();
+
+//Cube
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(0.0f, 0.5f, 3.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_Cube.RenderModel();
+
+//Cube2
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(1.0f, 0.5f, -4.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_Cube.RenderModel();
+
+//Cube3
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(-7.0f, 0.5f, -5.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_Cube.RenderModel();
+
+//Cube4
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(-5.0f, 0.5f, -8.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_Cube.RenderModel();
+
+//Cube5
+model = glm::mat4(); //Creating identity matrix
+model = glm::translate(model, glm::vec3(-3.0f, 0.5f, -3.0f)); //Transforming identity matrix into translation matrix
+shader->SetUniform("u_model", model);
+if (shader == &mainShader) { shinyMaterial.UseMaterial(&mainShader, "u_material.specularIntensity", "u_material.shininess"); }
+testModel_Cube.RenderModel();
+
+//----------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------

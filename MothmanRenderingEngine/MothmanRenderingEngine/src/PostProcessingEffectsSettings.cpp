@@ -10,6 +10,8 @@ PostProcessingEffectsSettings::PostProcessingEffectsSettings()
 	colorCorrection = ColorCorrection();
 	vignette = Vignette();
 	logoOverlay = LogoOverlay();
+	ssao = SSAO();
+	depthVisualize = DepthVisualize();
 }
 
 PostProcessingEffectsSettings::~PostProcessingEffectsSettings()

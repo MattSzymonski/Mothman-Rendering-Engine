@@ -40,8 +40,8 @@ Terrain * TerrainController::GetTerrain(const string & terrainName)
 
 	if (terrains.find(terrainName) == terrains.end())
 	{
-		std::cout << "Failed getting terrain: " + terrainName + ". Terrain with this name not found" << std::endl;
-		assert(false && "Failed getting terrain. Terrain with this name not found");
+		//std::cout << "Failed getting terrain: " + terrainName + ". Terrain with this name not found" << std::endl;
+		//assert(false && "Failed getting terrain. Terrain with this name not found");
 		return nullptr;
 	}
 	else

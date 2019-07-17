@@ -16,14 +16,17 @@ public:
 		GLfloat aIntensity, GLfloat dIntensity);
 
 	ShadowMap* GetShadowMap() { return shadowMap; }
-	glm::vec3 GetColour() { return colour; }
+	glm::vec3 GetColor() { return color; }
+	void SetColor(glm::vec3 value) { color = value; }
 	GLfloat GetAmbientIntensity() { return ambientIntensity; }
+	void SetAmbientIntensity(GLfloat value) { ambientIntensity = value; }
 	GLfloat GetDiffuseIntensity() { return diffuseIntensity; }
+	void SetDiffuseIntensity(GLfloat value) { diffuseIntensity = value; }
 
 	~Light();
 
 protected:
-	glm::vec3 colour;
+	glm::vec3 color;
 	GLfloat ambientIntensity;
 	GLfloat diffuseIntensity;
 

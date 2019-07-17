@@ -34,7 +34,8 @@ Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning pur
 - ImGui
 
 ## Notes
-Please compile the project with x86 as target platform
+Please compile the project with x86 as target platform.
+Heavy refactoring is in progress.
 
 <p align="center">
   <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/MothmanRenderingEngineFooter.png" img width=100%>

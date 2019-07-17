@@ -18,8 +18,8 @@ void Model::RenderModel()
 		}
 		*/
 		for (size_t t = 0; t < textureList.size(); t++)
-		{		
-			if(textureList[t] != NULL) { textureList[t]->UseTexture(); }	
+		{
+			if (textureList[t] != NULL) { textureList[t]->UseTexture(); }
 		}
 
 		meshList[i]->RenderMesh();
@@ -37,7 +37,7 @@ void Model::LoadModel(const std::string & fileName)
 		return;
 	}
 
-	LoadNode(scene->mRootNode, scene); 
+	LoadNode(scene->mRootNode, scene);
 
 	LoadMaterials(scene);
 	//std::cout << "Model " << fileName << " failed to load" << std::endl;
@@ -45,7 +45,7 @@ void Model::LoadModel(const std::string & fileName)
 }
 
 void Model::LoadNode(aiNode * node, const aiScene * scene)
-{ 
+{
 	//One model can have separate meshes (like Unity reading mesh as multiple meshes selected when exporting in Blender)
 	for (size_t i = 0; i < node->mNumMeshes; i++)
 	{
@@ -54,7 +54,7 @@ void Model::LoadNode(aiNode * node, const aiScene * scene)
 
 	for (size_t i = 0; i < node->mNumChildren; i++)
 	{
-		LoadNode(node->mChildren[i], scene); 
+		LoadNode(node->mChildren[i], scene);
 	}
 }
 
@@ -75,7 +75,7 @@ void Model::LoadMesh(aiMesh * mesh, const aiScene * scene)
 			vertices.insert(vertices.end(), { 0.0f, 0.0f });
 		}
 		vertices.insert(vertices.end(), { -mesh->mNormals[i].x, -mesh->mNormals[i].y, -mesh->mNormals[i].z }); //Adding normals to the list of vertices
-			
+
 		vertices.insert(vertices.end(), { 0.0f, 0.0f, 0.0f }); //Adding tangents
 
 	} //Do the same for next vertex in file
@@ -117,26 +117,24 @@ void Model::LoadMaterials(const aiScene * scene)
 				int idx = std::string(path.data).rfind("\\"); //Find \ in string and set cursor there
 				std::string filename = std::string(path.data).substr(idx + 1); //Get raw texture file name
 
-				std::string texPath = std::string("Textures/") + filename; //Path to texture (All textures have to be in this folder. No relative or absolute paths are taken from the file itself)
-				//std::cout << "xxxx" << texPath << std::endl;
+				std::string texPath = std::string("res/Textures/") + filename; //Path to texture (All textures have to be in this folder. No relative or absolute paths are taken from the file itself)
 				textureList[texturListOffset] = new Texture(texPath.c_str(), TexType::Diffuse); //Create texture
-				
+
 				if (!textureList[texturListOffset]->LoadTexture()) //Load this created texture
 				{
 					std::cout << "Failed to load texture at: " << texPath << ". Loading default texture" << std::endl;
-					//printf("Failed to load texture at: %s. Loading default texture\n", texPath);
-					textureList[texturListOffset] = new Texture("Textures/Defaults/diffuse.png", TexType::Diffuse);
+					textureList[texturListOffset] = new Texture("res/Textures/Defaults/Diffuse.png", TexType::Diffuse);
 					textureList[texturListOffset]->LoadTexture();
 				}
 			}
 		}
 		else //No texture found, load default one
 		{
-			textureList[texturListOffset] = new Texture("Textures/Defaults/diffuse.png", TexType::Diffuse);
+			textureList[texturListOffset] = new Texture("res/Textures/Defaults/Diffuse.png", TexType::Diffuse);
 			textureList[texturListOffset]->LoadTexture();
 		}
 		texturListOffset++;
-		
+
 		textureList[texturListOffset] = nullptr;
 		if (material->GetTextureCount(aiTextureType_NORMALS)) //Detect normal texture in material
 		{
@@ -146,21 +144,21 @@ void Model::LoadMaterials(const aiScene * scene)
 				int idx = std::string(path.data).rfind("\\"); //Find \ in string and set cursor there
 				std::string filename = std::string(path.data).substr(idx + 1); //Get raw texture file name
 
-				std::string texPath = std::string("Textures/") + filename; //Path to texture (All textures have to be in this folder. No relative or absolute paths are taken from the file itself)
+				std::string texPath = std::string("res/Textures/") + filename; //Path to texture (All textures have to be in this folder. No relative or absolute paths are taken from the file itself)
 
 				textureList[texturListOffset] = new Texture(texPath.c_str(), TexType::Normal); //Create texture
 
 				if (!textureList[texturListOffset]->LoadTexture()) //Load this created texture
 				{
 					printf("Failed to load normal texture at: %s. Loading default texture\n", texPath);
-					textureList[texturListOffset] = new Texture("Textures/Defaults/normal.png", TexType::Normal);
+					textureList[texturListOffset] = new Texture("res/Textures/Defaults/Normal.png", TexType::Normal);
 					textureList[texturListOffset]->LoadTexture();
 				}
 			}
 		}
 		else //No texture found, load default one
 		{
-			textureList[texturListOffset] = new Texture("Textures/Defaults/normal.png", TexType::Normal);
+			textureList[texturListOffset] = new Texture("res/Textures/Defaults/Normal.png", TexType::Normal);
 			textureList[texturListOffset]->LoadTexture();
 		}
 		texturListOffset++;

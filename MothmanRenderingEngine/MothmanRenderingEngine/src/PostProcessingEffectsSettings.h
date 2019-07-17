@@ -22,6 +22,14 @@ private:
 	bool enabled;
 };
 
+struct SSAO : PostProcessingEffectSettings
+{
+public:
+
+private:
+
+};
+
 struct Invert : PostProcessingEffectSettings 
 {
 public:
@@ -79,6 +87,17 @@ private:
 
 };
 
+struct DepthVisualize : PostProcessingEffectSettings
+{
+public:
+	float GetNear() { return near; }
+	void SetNear(float value) { near = value; }
+	float GetFar() { return far; }
+	void SetFar(float value) { far = value; }
+private:
+	float near = 10;
+	float far = 500;
+};
 
 class PostProcessingEffectsSettings
 {
@@ -96,6 +115,8 @@ public:
 	ColorCorrection colorCorrection;
 	Vignette vignette;
 	LogoOverlay logoOverlay;
+	SSAO ssao;
+	DepthVisualize depthVisualize;
 
 private:
 	bool enabled;

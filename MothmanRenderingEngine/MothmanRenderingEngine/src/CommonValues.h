@@ -19,4 +19,6 @@ const int POSTPROCESSES = 5;
 const int WINDOW_SIZE_WIDTH_START = 1400;
 const int WINDOW_SIZE_HEIGHT_START = 800;
 
+
+const int SSAO_MAX_SAMPLES_PER_KERNEL = 64;
 #endif
