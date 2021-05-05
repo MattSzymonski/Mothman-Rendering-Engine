@@ -25,6 +25,15 @@ Mothman Rendering Engine - Modern OpenGL rendering engine coded for learning pur
 <p align="center">
   <img src="MothmanRenderingEngine/MothmanRenderingEngine/res/Media/Screenshots/MRE_Screenshot_1.png" img width=100%>
 </p>
+  
+![](MothmanRenderingEngine/MothmanRenderingEngine/res/Media/Gifs/MRE_D1_1.gif)
+
+![](MothmanRenderingEngine/MothmanRenderingEngine/res/Media/Gifs/MRE_D1_2.gif)
+
+Tesselation
+![](MothmanRenderingEngine/MothmanRenderingEngine/res/Media/Gifs/MRE_D1_3.gif)
+
+![](MothmanRenderingEngine/MothmanRenderingEngine/res/Media/Gifs/MRE_D1_4.gif)
 
 ## Third Party Dependencies
 - GLFW
